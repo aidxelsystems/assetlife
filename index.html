@@ -26,7 +26,7 @@
             </div>
         </header>
 
-        <!-- STEP 1: Input Form -->
+        <!-- STEP 1: Input Form (Reordered) -->
         <section id="step-input" class="screen active">
             <div class="hero-text">
                 <h1>あなたの資産、<br>何歳まで持ちますか？</h1>
@@ -34,20 +34,7 @@
             </div>
 
             <form id="simulation-form">
-                <div class="form-group">
-                    <label><i class="fa-solid fa-building"></i> ご自宅の査定額（目安）</label>
-                    <select id="input-property" required>
-                        <option value="" disabled selected>選択してください</option>
-                        <option value="5000000">1,000万円未満</option>
-                        <option value="15000000">1,000〜2,000万円</option>
-                        <option value="30000000">2,000〜4,000万円</option>
-                        <option value="50000000">4,000〜6,000万円</option>
-                        <option value="70000000">6,000〜8,000万円</option>
-                        <option value="90000000">8,000万円以上</option>
-                        <option value="0">持ち家なし</option>
-                    </select>
-                </div>
-
+                <!-- 1. 年齢 -->
                 <div class="form-group">
                     <label><i class="fa-solid fa-user"></i> ご年齢</label>
                     <select id="input-age" required>
@@ -61,19 +48,20 @@
                     </select>
                 </div>
 
+                <!-- 2. お体の状態 -->
                 <div class="form-group">
-                    <label><i class="fa-solid fa-piggy-bank"></i> 預貯金額</label>
-                    <select id="input-savings" required>
+                    <label><i class="fa-solid fa-heart-pulse"></i> お体の状態</label>
+                    <select id="input-health" required>
                         <option value="" disabled selected>選択してください</option>
-                        <option value="1500000">300万円未満</option>
-                        <option value="4000000">300〜500万円</option>
-                        <option value="7500000">500〜1,000万円</option>
-                        <option value="15000000">1,000〜2,000万円</option>
-                        <option value="25000000">2,000〜3,000万円</option>
-                        <option value="40000000">3,000万円以上</option>
+                        <option value="0">自立</option>
+                        <option value="3000">歩行不安（リハビリ重視）</option>
+                        <option value="6000">要支援</option>
+                        <option value="20000">要介護1〜2</option>
+                        <option value="30000">要介護3〜5</option>
                     </select>
                 </div>
 
+                <!-- 3. 月額年金受給額 -->
                 <div class="form-group">
                     <label><i class="fa-solid fa-money-bill-wave"></i> 月額年金受給額</label>
                     <select id="input-pension" required>
@@ -87,15 +75,32 @@
                     </select>
                 </div>
 
+                <!-- 4. 預貯金額 -->
                 <div class="form-group">
-                    <label><i class="fa-solid fa-heart-pulse"></i> お体の状態</label>
-                    <select id="input-health" required>
+                    <label><i class="fa-solid fa-piggy-bank"></i> 預貯金額</label>
+                    <select id="input-savings" required>
                         <option value="" disabled selected>選択してください</option>
-                        <option value="0">自立</option>
-                        <option value="3000">歩行不安（リハビリ重視）</option>
-                        <option value="6000">要支援</option>
-                        <option value="20000">要介護1〜2</option>
-                        <option value="30000">要介護3〜5</option>
+                        <option value="1500000">300万円未満</option>
+                        <option value="4000000">300〜500万円</option>
+                        <option value="7500000">500〜1,000万円</option>
+                        <option value="15000000">1,000〜2,000万円</option>
+                        <option value="25000000">2,000〜3,000万円</option>
+                        <option value="40000000">3,000万円以上</option>
+                    </select>
+                </div>
+
+                <!-- 5. 自宅査定額 -->
+                <div class="form-group">
+                    <label><i class="fa-solid fa-building"></i> ご自宅の査定額（目安）</label>
+                    <select id="input-property" required>
+                        <option value="" disabled selected>選択してください</option>
+                        <option value="5000000">1,000万円未満</option>
+                        <option value="15000000">1,000〜2,000万円</option>
+                        <option value="30000000">2,000〜4,000万円</option>
+                        <option value="50000000">4,000〜6,000万円</option>
+                        <option value="70000000">6,000〜8,000万円</option>
+                        <option value="90000000">8,000万円以上</option>
+                        <option value="0">持ち家なし</option>
                     </select>
                 </div>
 
@@ -115,13 +120,14 @@
                 </div>
             </div>
 
-            <div class="chart-container">
+            <div class="chart-wrapper">
                 <canvas id="simpleChart"></canvas>
             </div>
 
             <div class="message-box">
-                <p><i class="fa-solid fa-triangle-exclamation"></i> 平均的な相場で試算した結果、<br><strong><span
-                            id="simple-years-left">--</span>年後</strong>に資金が不足する可能性があります。</p>
+                <p><i class="fa-solid fa-triangle-exclamation"></i> <strong><span
+                            id="simple-years-left">--</span>年後</strong>に資金が厳しくなる可能性があります。</p>
+                <p class="sub-message">※85歳前後は医療・介護費が増えやすい時期です。</p>
             </div>
 
             <button type="button" class="btn-primary" onclick="goToBridge()">
@@ -180,23 +186,20 @@
                         <input type="tel" id="input-phone" placeholder="例：090-1234-5678">
                     </div>
 
-                    <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">
-                        結果はすぐ画面に表示され、<br>保存用としてメールにもお送りします。
-                    </p>
-                </form>
+                    <p class="security-note"><i class="fa-solid fa-shield-halved"></i> この時点で業者に情報は送信されません</p>
 
-                <button type="button" class="btn-secondary" onclick="goToFullResult()">
-                    精密シミュレーションを見る <i class="fa-solid fa-lock"></i>
-                </button>
-                <p class="privacy-note"><small>入力情報はSSLで暗号化され保護されます。</small></p>
+                    <button type="button" class="btn-secondary" onclick="goToFullResult()">
+                        あなたの条件で確認する <i class="fa-solid fa-lock"></i>
+                    </button>
+                    <p class="privacy-note"><small>入力情報はSSLで暗号化され保護されます。</small></p>
+                </form>
             </div>
         </section>
 
         <!-- STEP 4: Full Result -->
         <section id="step-full-result" class="screen">
             <div class="result-header premium">
-                <div class="badge">完全版レポート</div>
-                <h2>詳細診断結果</h2>
+                <div class="badge">判断整理の結果</div>
                 <div class="main-result">
                     <span class="label">修正後の資産寿命</span>
                     <div class="value"><span id="full-age-result">--</span>歳<small>まで伸長可能</small></div>
@@ -209,31 +212,196 @@
 
             <div class="warning-zone" id="warning-zone">
                 <i class="fa-solid fa-circle-exclamation"></i>
-                <p>85歳時点で資金ショートのリスクがあります。<br>早めの対策が必要です。</p>
+                <p>資金ショートのリスクがある時期を確認してください。</p>
             </div>
 
-            <div class="action-buttons">
-                <h3>この結果を現実にするために</h3>
+            <!-- New Action Selection (A/B/C) -->
+            <div class="action-selection">
+                <h3>今後の進め方を選択</h3>
 
-                <div class="card-btn" onclick="openExternal('assessment')">
-                    <div class="icon"><i class="fa-solid fa-magnifying-glass-dollar"></i></div>
-                    <div class="text">
-                        <strong>正確な自宅の価値を知る</strong>
-                        <small>無料一括査定で資金計画を確定</small>
+                <div class="option-card" onclick="selectAction('A')">
+                    <div class="tag tag-a">A</div>
+                    <div class="content">
+                        <h4>早さと確実性を重視</h4>
+                        <p>専門家と連携し、最短ルートで資金確保を進めます。</p>
                     </div>
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
 
-                <div class="card-btn" onclick="openExternal('consult')">
-                    <div class="icon"><i class="fa-solid fa-comments"></i></div>
-                    <div class="text">
-                        <strong>専門家に相談する</strong>
-                        <small>今の資産で入れる施設を探す</small>
+                <div class="option-card" onclick="selectAction('B')">
+                    <div class="tag tag-b">B</div>
+                    <div class="content">
+                        <h4>条件を比較して高値を探す</h4>
+                        <p>複数の選択肢から、最も有利な条件をじっくり比較します。</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+
+                <div class="option-card simple" onclick="selectAction('C')">
+                    <div class="tag tag-c">C</div>
+                    <div class="content">
+                        <h4>まず一部だけ確認する</h4>
+                        <p>まだ決めていない方向けの簡単な確認です。</p>
                     </div>
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
             </div>
         </section>
+
+        <!-- STEP 5: Final Confirm (A: Quick / B: Compare) -->
+        <section id="step-final-confirm-ab" class="screen">
+            <div class="confirm-header">
+                <h2 id="final-confirm-title">最終確認</h2>
+                <div class="info-note" style="text-align: left; margin-bottom: 20px;">
+                    <p style="margin-bottom: 8px;"><strong>日程はまだ決める必要はありません。</strong><br>連絡しやすい条件だけお知らせください。</p>
+                    <p style="font-size: 0.75rem; color: #888;">
+                        ※以降の具体的なご連絡・日程調整は、担当業者より直接行われます。<br>本サービスは判断整理とご紹介までを行います。</p>
+                </div>
+            </div>
+
+            <form id="form-confirm-ab">
+                <!-- Checkboxes for Services (Pre-selected based on flow?) -->
+                <!-- Assuming user selects services FIRST, then this screen appears? 
+                     Actually, spec says "A-1 | Final Confirm ... Input items". 
+                     It implies services were already selected or this screen asks for details FOR selected services.
+                     Wait, spec A-2 says "Select Service" is saved. 
+                     Let's keep the service selection checkboxes here as part of final confirmation. -->
+
+                <p style="margin-bottom: 10px; font-weight: bold;">今回、どの実務を確認しますか？</p>
+                <div class="checkbox-group" style="margin-bottom: 24px;">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="service" value="realestate">
+                        <span class="custom-check"><i class="fa-solid fa-check"></i></span>
+                        <div class="text"><strong>不動産</strong></div>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="service" value="nursing">
+                        <span class="custom-check"><i class="fa-solid fa-check"></i></span>
+                        <div class="text"><strong>老人ホーム</strong></div>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="service" value="buyback">
+                        <span class="custom-check"><i class="fa-solid fa-check"></i></span>
+                        <div class="text"><strong>出張買取</strong></div>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="service" value="car">
+                        <span class="custom-check"><i class="fa-solid fa-check"></i></span>
+                        <div class="text"><strong>車</strong></div>
+                    </label>
+                </div>
+
+                <div style="margin: 24px 0; border-top: 1px dashed #ccc;"></div>
+
+                <div class="form-group">
+                    <label>① 希望連絡時間帯</label>
+                    <select id="input-contact-time">
+                        <option value="any">いつでも可</option>
+                        <option value="weekday-am">平日 午前（9–12）</option>
+                        <option value="weekday-pm">平日 午後（13–17）</option>
+                        <option value="weekday-night">平日 夜（17–20）</option>
+                        <option value="weekend">土日</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>② 急ぎ度 <span style="color:red; font-size:0.8em;">(重要)</span></label>
+                    <select id="input-urgency">
+                        <option value="soon">近いうちに相談したい</option>
+                        <option value="week">1週間以内に動ければ十分</option>
+                        <option value="year">1年以内に動きたい</option>
+                        <option value="info">情報収集中（急いでいない）</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>詳細住所</label>
+                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">
+                        <span id="prefilled-city" style="font-weight:bold;">--区</span> (入力済み)<br>
+                        続きの番地・マンション名を入力してください
+                    </p>
+                    <input type="text" id="input-address-detail" placeholder="例：1-2-3 マンション◯◯ 101号室">
+                </div>
+
+                <div class="form-group">
+                    <label>備考欄 <span style="font-size:0.8em; color:#999; font-weight:normal;">(任意)</span></label>
+                    <textarea id="input-remarks" rows="3" placeholder="ご質問やご要望があればご記入ください"></textarea>
+                </div>
+
+                <p id="b-route-note" style="display:none; font-size:0.85rem; color:#d63031; margin-bottom:15px;">
+                    ※ 比較のため複数社から連絡が入る場合があります
+                </p>
+
+                <button type="button" class="btn-primary" onclick="submitFinalAB()">
+                    <span id="btn-text-ab">この内容でまとめて依頼する</span> <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+            <button type="button" class="btn-text" onclick="showScreen('step-full-result')">戻る</button>
+        </section>
+
+        <!-- STEP 6: Final Confirm (C: Single Check) -->
+        <section id="step-final-confirm-c" class="screen">
+            <div class="confirm-header">
+                <h2>まず一部だけ確認</h2>
+                <div class="info-note">
+                    <p><strong>※この確認は、比較や売却を前提としたものではありません。</strong><br>まだ動くか決めていない方向けの、負担のない「目安確認」です。</p>
+                </div>
+            </div>
+
+            <form id="form-confirm-c">
+                <p style="margin-bottom: 10px; font-weight: bold;">今回はどれを軽く確認しますか？</p>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="service_single" value="realestate">
+                        <span class="custom-radio"></span>
+                        <span class="label-text">不動産の査定を確認</span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="service_single" value="nursing">
+                        <span class="custom-radio"></span>
+                        <span class="label-text">老人ホーム候補を確認</span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="service_single" value="buyback">
+                        <span class="custom-radio"></span>
+                        <span class="label-text">出張買取を確認</span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="service_single" value="car">
+                        <span class="custom-radio"></span>
+                        <span class="label-text">車の査定を確認</span>
+                    </label>
+                </div>
+
+                <div style="margin: 24px 0; border-top: 1px dashed #ccc;"></div>
+
+                <div class="form-group">
+                    <label>詳細住所</label>
+                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">
+                        <span id="prefilled-city-c" style="font-weight:bold;">--区</span> (入力済み)<br>
+                        続きの番地・マンション名を入力してください
+                    </p>
+                    <input type="text" id="input-address-detail-c" placeholder="例：1-2-3 マンション◯◯ 101号室">
+                </div>
+
+                <div class="form-group">
+                    <label>電話番号 <span style="font-size:0.8em; color:#999; font-weight:normal;">(任意)</span></label>
+                    <p style="font-size: 0.75rem; color: #888; margin-bottom: 5px;">※具体的なご相談をご希望の場合のみ、別途ご連絡先をお伺いします。</p>
+                    <input type="tel" id="input-phone-c" placeholder="例：090-1234-5678">
+                </div>
+
+                <div class="info-note" style="background:#fff3cd; color:#856404; margin-top:20px;">
+                    <p style="font-weight:bold; font-size:0.8rem;">
+                        以降の具体的なご連絡・日程調整は、<br>担当業者より直接行われます。<br>本サービスは判断整理とご紹介までを行います。</p>
+                </div>
+
+                <button type="button" class="btn-secondary" onclick="submitFinalC()">
+                    この条件で確認する <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+            <button type="button" class="btn-text" onclick="showScreen('step-full-result')">戻る</button>
+        </section>
+
     </div>
 
     <script src="script.js"></script>
