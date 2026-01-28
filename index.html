@@ -181,11 +181,6 @@
                         <input type="email" id="input-email" placeholder="例：taro@example.com" required>
                     </div>
 
-                    <div class="form-group">
-                        <label>電話番号 <span style="font-size:0.8em; color:#999; font-weight:normal;">(任意)</span></label>
-                        <input type="tel" id="input-phone" placeholder="例：090-1234-5678">
-                    </div>
-
                     <p class="security-note"><i class="fa-solid fa-shield-halved"></i> この時点で業者に情報は送信されません</p>
 
                     <button type="button" class="btn-secondary" onclick="goToFullResult()">
@@ -210,9 +205,35 @@
                 <canvas id="fullChart"></canvas>
             </div>
 
-            <div class="warning-zone" id="warning-zone">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                <p>資金ショートのリスクがある時期を確認してください。</p>
+            <!-- Warning Zone (Restored) -->
+            <div id="warning-zone" class="warning-zone" style="display:none;">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <p></p>
+            </div>
+
+            <!-- New Chart Annotation Text -->
+            <div class="result-text-block"
+                style="background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:20px; font-size:0.9rem; line-height:1.6;">
+                <p><strong>想定される生活状況によって、<br>必要となる支出水準は変わります。</strong></p>
+                <ul style="list-style:none; margin:10px 0; padding-left:10px; border-left:3px solid #ddd;">
+                    <li style="margin-bottom:8px;">お体の状態が比較的安定している場合<br><span
+                            style="color:var(--primary-color); font-weight:bold;">→ 月18万〜22万円前後</span></li>
+                    <li>介護サポートが増える場合<br><span style="color:var(--danger-color); font-weight:bold;">→ 月22万〜30万円前後</span>
+                    </li>
+                </ul>
+                <p style="font-size:0.8rem; color:#666; margin-top:10px;">
+                    ※この結果は、ご自宅の価値を「平均的な相場」で仮置きして算出しています。<br>
+                    実際の条件が分かると、資産寿命は前後する可能性があります。<br>
+                    上記の金額には、将来的に老人ホーム等の居住費用が発生する可能性を想定しています。
+                </p>
+                <p style="margin-top:15px; font-weight:bold;">
+                    正確な金額を今決める必要はありません。<br>
+                    あくまで、今後を考えるための目安です。
+                </p>
+                <p style="margin-top:10px;">
+                    この結果を、今後の判断材料として使うために、<br>
+                    次の一歩を確認してみましょう。
+                </p>
             </div>
 
             <!-- New Action Selection (A/B/C) -->
@@ -222,8 +243,9 @@
                 <div class="option-card" onclick="selectAction('A')">
                     <div class="tag tag-a">A</div>
                     <div class="content">
-                        <h4>早さと確実性を重視</h4>
-                        <p>専門家と連携し、最短ルートで資金確保を進めます。</p>
+                        <h4>早さと確実性を重視して進める<br><small style="color:#666; font-weight:normal;">（事情配慮・迅速ルート）</small></h4>
+                        <p style="margin-top:5px; font-weight:bold;">手間をかけず、<br>生活やご家族への影響を最小限に進めたい方向け</p>
+                        <p style="margin-top:5px; font-size:0.8rem;">医療・介護・生活状況を踏まえた上で、必要な実務を一括で確認できます。</p>
                     </div>
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
@@ -231,8 +253,9 @@
                 <div class="option-card" onclick="selectAction('B')">
                     <div class="tag tag-b">B</div>
                     <div class="content">
-                        <h4>条件を比較して高値を探す</h4>
-                        <p>複数の選択肢から、最も有利な条件をじっくり比較します。</p>
+                        <h4>条件を比較してより高値を探す<br><small style="color:#666; font-weight:normal;">（比較・市場確認ルート）</small></h4>
+                        <p style="margin-top:5px; font-weight:bold;">時間をかけてでも、<br>選択肢を広く持って判断したい方向け</p>
+                        <p style="margin-top:5px; font-size:0.8rem;">複数の可能性を比較し、今の市場感を把握した上で進められます。</p>
                     </div>
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
@@ -240,11 +263,21 @@
                 <div class="option-card simple" onclick="selectAction('C')">
                     <div class="tag tag-c">C</div>
                     <div class="content">
-                        <h4>まず一部だけ確認する</h4>
-                        <p>まだ決めていない方向けの簡単な確認です。</p>
+                        <h4>まず一部だけ確認する<br><small style="color:#666; font-weight:normal;">（部分確認・お試し）</small></h4>
+                        <p style="margin-top:5px;">まだ動くか決めていない方向け</p>
+                        <p style="margin-top:5px; font-size:0.8rem;">今の条件での目安を、1項目だけ軽く確認できます。</p>
                     </div>
                     <i class="fa-solid fa-chevron-right"></i>
                 </div>
+            </div>
+            <div style="text-align:center; font-size:0.8rem; color:#666; margin-top:20px;">
+                ※この確認は、売却や契約を前提としたものではありません。
+            </div>
+
+            <div class="app-footer-links" style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
+                <button type="button" class="btn-text" onclick="showModal('supervisor')">【監修者について】</button>
+                <button type="button" class="btn-text" onclick="showModal('about')">【このサービスについて】</button>
+                <button type="button" class="btn-text" onclick="showModal('why')">【なぜこの仕組みを作ったのか】</button>
             </div>
         </section>
 
@@ -254,8 +287,6 @@
                 <h2 id="final-confirm-title">最終確認</h2>
                 <div class="info-note" style="text-align: left; margin-bottom: 20px;">
                     <p style="margin-bottom: 8px;"><strong>日程はまだ決める必要はありません。</strong><br>連絡しやすい条件だけお知らせください。</p>
-                    <p style="font-size: 0.75rem; color: #888;">
-                        ※以降の具体的なご連絡・日程調整は、担当業者より直接行われます。<br>本サービスは判断整理とご紹介までを行います。</p>
                 </div>
             </div>
 
@@ -318,9 +349,14 @@
                     <label>詳細住所</label>
                     <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">
                         <span id="prefilled-city" style="font-weight:bold;">--区</span> (入力済み)<br>
-                        続きの番地・マンション名を入力してください
+                        <span style="color:#d63031;">※町名（○○町・○丁目）からご入力ください</span>
                     </p>
-                    <input type="text" id="input-address-detail" placeholder="例：1-2-3 マンション◯◯ 101号室">
+                    <input type="text" id="input-address-detail" placeholder="例：世田谷区三軒茶屋1-2-3">
+                </div>
+
+                <div class="form-group">
+                    <label>電話番号 <span style="color:red">*</span></label>
+                    <input type="tel" id="input-phone-ab" placeholder="例：090-1234-5678" required>
                 </div>
 
                 <div class="form-group">
@@ -332,11 +368,22 @@
                     ※ 比較のため複数社から連絡が入る場合があります
                 </p>
 
+                <div class="info-note" style="background:#fff3cd; color:#856404; margin-top:20px;">
+                    <p style="font-weight:bold; font-size:0.8rem;">
+                        以降の具体的なご連絡・日程調整は、<br>担当業者より直接行われます。<br>本サービスは判断整理とご紹介までを行います。</p>
+                </div>
+
                 <button type="button" class="btn-primary" onclick="submitFinalAB()">
                     <span id="btn-text-ab">この内容でまとめて依頼する</span> <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </form>
             <button type="button" class="btn-text" onclick="showScreen('step-full-result')">戻る</button>
+
+            <div class="app-footer-links" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                <button type="button" class="btn-text" onclick="showModal('supervisor')">【監修者について】</button>
+                <button type="button" class="btn-text" onclick="showModal('about')">【このサービスについて】</button>
+                <button type="button" class="btn-text" onclick="showModal('why')">【なぜこの仕組みを作ったのか】</button>
+            </div>
         </section>
 
         <!-- STEP 6: Final Confirm (C: Single Check) -->
@@ -379,9 +426,9 @@
                     <label>詳細住所</label>
                     <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">
                         <span id="prefilled-city-c" style="font-weight:bold;">--区</span> (入力済み)<br>
-                        続きの番地・マンション名を入力してください
+                        <span style="color:#d63031;">※町名（○○町・○丁目）からご入力ください</span>
                     </p>
-                    <input type="text" id="input-address-detail-c" placeholder="例：1-2-3 マンション◯◯ 101号室">
+                    <input type="text" id="input-address-detail-c" placeholder="例：世田谷区三軒茶屋1-2-3">
                 </div>
 
                 <div class="form-group">
@@ -390,18 +437,76 @@
                     <input type="tel" id="input-phone-c" placeholder="例：090-1234-5678">
                 </div>
 
-                <div class="info-note" style="background:#fff3cd; color:#856404; margin-top:20px;">
-                    <p style="font-weight:bold; font-size:0.8rem;">
-                        以降の具体的なご連絡・日程調整は、<br>担当業者より直接行われます。<br>本サービスは判断整理とご紹介までを行います。</p>
-                </div>
-
                 <button type="button" class="btn-secondary" onclick="submitFinalC()">
-                    この条件で確認する <i class="fa-solid fa-magnifying-glass"></i>
+                    この条件で一度確認する <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
             </form>
             <button type="button" class="btn-text" onclick="showScreen('step-full-result')">戻る</button>
+
+            <div class="app-footer-links" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                <button type="button" class="btn-text" onclick="showModal('supervisor')">【監修者について】</button>
+                <button type="button" class="btn-text" onclick="showModal('about')">【このサービスについて】</button>
+                <button type="button" class="btn-text" onclick="showModal('why')">【なぜこの仕組みを作ったのか】</button>
+            </div>
         </section>
 
+    </div>
+
+    <!-- Modals -->
+    <div id="supervisor" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('supervisor')">&times;</span>
+            <div class="modal-title">監修者について</div>
+            <div class="modal-body">
+                <p style="font-weight:bold; margin-bottom:10px;">身体と資産、両方の「寿命」を守る専門家</p>
+                <p>「人生100年時代」において、健康寿命と資産寿命は切り離せません。<br>
+                    私は国家資格を持つ医療・介護のプロとして、東京23区を中心に「身体の自立」と「将来の安心」をトータルで支援しています。</p>
+                <p style="margin-top:15px; font-weight:bold;">監修者：[]</p>
+
+                <h4>【保有資格・経歴】</h4>
+                <ul style="padding-left:20px; list-style:disc;">
+                    <li>20年以上の現場経験</li>
+                    <li>延べ5万件を超える施術・相談実績</li>
+                    <li>柔道整復師・鍼灸師（国家資格）</li>
+                    <li>機能訓練指導員・介護士</li>
+                    <li>東京23区を中心に、シニア支援に長く携わる</li>
+                </ul>
+
+                <h4>【監修にあたっての想い】</h4>
+                <p>介護現場やリハビリの最前線で、「住まいと資金のミスマッチ」に悩む方を数多く見てきました。</p>
+                <p>本サイトでは、医療・介護の知見に基づき、「あと何年、今の家で健やかに暮らせるか」を可視化します。<br>
+                    不動産屋ではない専門職の視点から、判断を急がせない中立的なシミュレーションをお届けします。</p>
+
+                <h4>【運営・監修組織】</h4>
+                <p>東京23区（世田谷・大田等）を拠点に、シニア世代の身体と資産の最適化を支援しています。</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="about" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('about')">&times;</span>
+            <div class="modal-title">このサービスについて</div>
+            <div class="modal-body">
+                <p>本サービスは、医療・介護の国家資格者が監修し、身体状況と生活実態を踏まえた判断整理を目的としています。<br>
+                    売却や契約を前提としない、中立的なシミュレーションです。</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="why" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('why')">&times;</span>
+            <div class="modal-title">なぜこの仕組みを作ったのか</div>
+            <div class="modal-body">
+                <p>介護やリハビリの現場で、多くの方が「身体の不安」と同時に「住まいやお金の不安」を抱えている姿を見てきました。</p>
+                <p>足腰が弱り、今の家での生活が難しくなっても、資産の整理や住み替えについて、誰に相談すればよいのか分からない。<br>
+                    不動産業者の営業には抵抗があり、結局、判断を先延ばしにしてしまう。</p>
+                <p>そうした状況を前に、「売るため」ではなく、「判断するため」の整理の仕組みが必要だと感じました。</p>
+                <p>このサービスは、身体状況と生活実態を起点に、今後の選択肢を可視化するためのものです。<br>
+                    売却や契約を前提とせず、判断を急がせないことを大切にしています。</p>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
