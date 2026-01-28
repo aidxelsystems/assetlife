@@ -102,12 +102,15 @@ function goToFullResult() {
     renderChart('fullChart', result.chartData, result.dangerIndex);
 
     // Show warning if refined lifespan is low
+    // Show warning if refined lifespan is low
     const warningEl = document.getElementById('warning-zone');
-    if (result.lifespan < 100) {
-        warningEl.style.display = 'flex';
-        warningEl.querySelector('p').innerHTML = `${result.lifespan}歳で資金が底をつく計算です。<br>対策を検討しましょう。`;
-    } else {
-        warningEl.style.display = 'none';
+    if (warningEl) {
+        if (result.lifespan < 100) {
+            warningEl.style.display = 'flex';
+            warningEl.querySelector('p').innerHTML = `${result.lifespan}歳で資金が底をつく計算です。<br>対策を検討しましょう。`;
+        } else {
+            warningEl.style.display = 'none';
+        }
     }
 
     showScreen('step-full-result');
@@ -331,11 +334,11 @@ function selectAction(type) {
 
         if (type === 'A') {
             titleEl.textContent = '最終確認（専門家連携）';
-            btnTextEl.textContent = 'この内容でまとめて依頼する';
+            btnTextEl.textContent = 'この進め方で確認を依頼する';
             noteBEl.style.display = 'none';
         } else {
             titleEl.textContent = '最終確認（一括比較）';
-            btnTextEl.textContent = '比較の依頼を送信する';
+            btnTextEl.textContent = '比較前提で確認を進める';
             noteBEl.style.display = 'block';
         }
         showScreen('step-final-confirm-ab');
@@ -366,6 +369,12 @@ function submitFinalAB() {
         return;
     }
 
+    const phone = document.getElementById('input-phone-ab').value;
+    if (!phone) {
+        alert('電話番号を入力してください');
+        return;
+    }
+
     // Capture Data (Mock)
     const data = {
         route: currentRoute,
@@ -373,6 +382,7 @@ function submitFinalAB() {
         contactTime: document.getElementById('input-contact-time').value,
         urgency: document.getElementById('input-urgency').value,
         address: (userData.detail.city || '') + addressDetail,
+        phone: phone,
         remarks: document.getElementById('input-remarks').value
     };
 
@@ -438,5 +448,30 @@ function openExternal(type) {
         alert('不動産一括査定サイトへ遷移します（デモ）');
     } else if (type === 'consult') {
         alert('専門家相談フォームへ遷移します（デモ）');
+    }
+}
+
+// Modal Logic
+function showModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function (event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.classList.remove('active');
+        document.body.style.overflow = '';
     }
 }
