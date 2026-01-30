@@ -108,6 +108,11 @@
                     シミュレーション結果を見る <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </form>
+
+            <!-- Fixed Articles Section -->
+            <div id="fixed-articles-container" class="articles-section">
+                <!-- Articles will be injected by script.js -->
+            </div>
         </section>
 
         <!-- STEP 2: Simple Result -->
@@ -146,10 +151,30 @@
                     <div class="form-group">
                         <label>エリア（区）</label>
                         <select id="input-city">
-                            <option value="港区">港区</option>
                             <option value="千代田区">千代田区</option>
+                            <option value="中央区">中央区</option>
+                            <option value="港区">港区</option>
+                            <option value="新宿区">新宿区</option>
+                            <option value="文京区">文京区</option>
+                            <option value="台東区">台東区</option>
+                            <option value="墨田区">墨田区</option>
+                            <option value="江東区">江東区</option>
+                            <option value="品川区">品川区</option>
+                            <option value="目黒区">目黒区</option>
+                            <option value="大田区">大田区</option>
                             <option value="世田谷区">世田谷区</option>
-                            <option value="その他">その他</option>
+                            <option value="渋谷区">渋谷区</option>
+                            <option value="中野区">中野区</option>
+                            <option value="杉並区">杉並区</option>
+                            <option value="豊島区">豊島区</option>
+                            <option value="北区">北区</option>
+                            <option value="荒川区">荒川区</option>
+                            <option value="板橋区">板橋区</option>
+                            <option value="練馬区">練馬区</option>
+                            <option value="足立区">足立区</option>
+                            <option value="葛飾区">葛飾区</option>
+                            <option value="江戸川区">江戸川区</option>
+                            <option value="その他">その他（23区外）</option>
                         </select>
                     </div>
 
@@ -403,6 +428,7 @@
                         <span class="custom-radio"></span>
                         <span class="label-text">不動産の査定を確認</span>
                     </label>
+                    <!-- Other options removed for C route simplification or kept as needed? User said "Single service selection". Assuming generic options remain valid but logic changes. Keeping UI as is but removing inputs below. -->
                     <label class="radio-item">
                         <input type="radio" name="service_single" value="nursing">
                         <span class="custom-radio"></span>
@@ -422,19 +448,12 @@
 
                 <div style="margin: 24px 0; border-top: 1px dashed #ccc;"></div>
 
-                <div class="form-group">
-                    <label>詳細住所</label>
-                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">
-                        <span id="prefilled-city-c" style="font-weight:bold;">--区</span> (入力済み)<br>
-                        <span style="color:#d63031;">※町名（○○町・○丁目）からご入力ください</span>
+                <!-- Removed personal info inputs for C Route as requested -->
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <p style="font-size: 0.9rem; color: #333; font-weight: bold;">外部サービスへ移動して確認します</p>
+                    <p style="font-size: 0.8rem; color: #2e7d32; margin-top: 8px;">
+                        <i class="fa-solid fa-shield-halved"></i> 当サービスから、連絡先が送信されることはありません。
                     </p>
-                    <input type="text" id="input-address-detail-c" placeholder="例：世田谷区三軒茶屋1-2-3">
-                </div>
-
-                <div class="form-group">
-                    <label>電話番号 <span style="font-size:0.8em; color:#999; font-weight:normal;">(任意)</span></label>
-                    <p style="font-size: 0.75rem; color: #888; margin-bottom: 5px;">※具体的なご相談をご希望の場合のみ、別途ご連絡先をお伺いします。</p>
-                    <input type="tel" id="input-phone-c" placeholder="例：090-1234-5678">
                 </div>
 
                 <button type="button" class="btn-secondary" onclick="submitFinalC()">
