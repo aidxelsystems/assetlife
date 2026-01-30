@@ -203,8 +203,26 @@ function renderChart(canvasId, dataPoints, dangerIndex) {
                 pointBorderWidth: 2,
                 // Segment styling for danger zone (v3+)
                 segment: {
-                    borderColor: ctx => ctx.p0.parsed.y < 0 || ctx.p1.parsed.y < 0 ? '#ff4d4d' : '#0066cc',
-                    backgroundColor: ctx => ctx.p0.parsed.y < 0 || ctx.p1.parsed.y < 0 ? 'rgba(255, 77, 77, 0.1)' : 'rgba(0, 102, 204, 0.1)'
+                    borderColor: ctx => {
+                        if (!ctx.p1 || !ctx.p1.parsed) return '#0066cc';
+                        const val = ctx.p1.parsed.y;
+                        const idx = ctx.p1.parsed.x;
+                        const dIdx = (dangerIndex !== -1) ? dangerIndex : (dataPoints.length - 1);
+
+                        if (val < 0) return '#ff4d4d'; // Red (Broken)
+                        if (idx >= dIdx - 10) return '#f1c40f'; // Yellow (Warning 10 years prior)
+                        return '#0066cc'; // Blue (Safe)
+                    },
+                    backgroundColor: ctx => {
+                        if (!ctx.p1 || !ctx.p1.parsed) return 'rgba(0, 102, 204, 0.1)';
+                        const val = ctx.p1.parsed.y;
+                        const idx = ctx.p1.parsed.x;
+                        const dIdx = (dangerIndex !== -1) ? dangerIndex : (dataPoints.length - 1);
+
+                        if (val < 0) return 'rgba(255, 77, 77, 0.1)';
+                        if (idx >= dIdx - 10) return 'rgba(241, 196, 15, 0.1)';
+                        return 'rgba(0, 102, 204, 0.1)';
+                    }
                 }
             }]
         },
@@ -344,13 +362,6 @@ function selectAction(type) {
         showScreen('step-final-confirm-ab');
     } else if (type === 'C') {
         console.log('Route C selected');
-        // Prefill City C
-        const prefillEl = document.getElementById('prefilled-city-c');
-        if (prefillEl) {
-            prefillEl.textContent = (userData.detail && userData.detail.city) ? userData.detail.city : '--区';
-        } else {
-            console.warn('Element prefilled-city-c not found');
-        }
         showScreen('step-final-confirm-c');
     }
 }
@@ -406,31 +417,30 @@ function submitFinalC() {
         return;
     }
 
-    const addressDetail = document.getElementById('input-address-detail-c').value;
-    if (!addressDetail) {
-        alert('番地・マンション名を入力してください');
-        return;
+    // Direct External Link Logic for Route C
+    // Based on selection, open relevant external site in new tab
+    let externalUrl = '';
+    switch (radio.value) {
+        case 'realestate':
+            externalUrl = 'https://example.com/realestate-assessment'; // Placeholder
+            break;
+        case 'nursing':
+            externalUrl = 'https://example.com/nursing-home-search'; // Placeholder
+            break;
+        case 'buyback':
+            externalUrl = 'https://example.com/buyback-assessment'; // Placeholder
+            break;
+        case 'car':
+            externalUrl = 'https://example.com/car-assessment'; // Placeholder
+            break;
+        default:
+            externalUrl = 'https://example.com';
     }
 
-    // Phone is optional for C unless specific condition, but spec says "If specific consultation needed..."
-    // For now we just capture if present.
-
-    // Capture Data (Mock)
-    const data = {
-        route: 'C',
-        service: radio.value,
-        address: (userData.detail.city || '') + addressDetail,
-        phone: document.getElementById('input-phone-c').value
-    };
-
-    console.log('Sending C Data:', data);
-
-    // C Route specific message or simple one? Spec seems to imply standard "Done".
-    // "Button content variable" -> Handled by backend later.
-    const msg1 = 'ご入力ありがとうございました。';
-    const msg2 = '選択された内容について確認を進めます。';
-
-    showComplete(msg1, msg2);
+    // Open in new tab
+    if (confirm('外部サイトへ移動して確認を行います。\n（※当サービスから連絡先が送信されることはありません）')) {
+        window.open(externalUrl, '_blank');
+    }
 }
 
 function showComplete(msg1, msg2) {
@@ -475,3 +485,45 @@ window.onclick = function (event) {
         document.body.style.overflow = '';
     }
 }
+
+// Fixed Articles Logic
+const fixedArticles = [
+    { title: "老後の資金、足りる？不足する？", summary: "年金だけでは不安な方へ。資産寿命の考え方を解説します。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article1" },
+    { title: "自宅を資産として活用する方法", summary: "住み続けながら資金を作る「リースバック」とは？", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article2" },
+    { title: "老人ホームの費用相場まとめ", summary: "入居一時金や月額費用の目安を分かりやすく解説。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article3" },
+    { title: "「資産寿命」を延ばす3つのポイント", summary: "早めの対策が鍵。今すぐできる家計の見直し術。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article4" },
+    { title: "介護破産を防ぐための基礎知識", summary: "親の介護費用、もしもの時に備えるために。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article5" },
+    { title: "専門家が教える「失敗しない施設選び」", summary: "見学時にチェックすべき重要ポイントを公開。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article6" },
+    { title: "不動産売却のタイミングはいつ？", summary: "市場動向と個人の状況から最適な時期を判断。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article7" },
+    { title: "子供に迷惑をかけないために", summary: "元気なうちに整理しておきたい資産と情報の話。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article8" },
+    { title: "「終活」は何から始めるべき？", summary: "エンディングノートの書き方から断捨離まで。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article9" },
+    { title: "私たちについて（運営理念）", summary: "シニアの安心な暮らしをサポートする想い。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article10" }
+];
+
+function renderArticles() {
+    const container = document.getElementById('fixed-articles-container');
+    if (!container) return;
+
+    let html = '<h3 style="margin-bottom:15px; font-size:1.1rem; color:#333; text-align:center;">お役立ち情報</h3>';
+
+    fixedArticles.forEach(article => {
+        html += `
+        <a href="${article.link}" class="article-banner">
+            <div class="article-image">
+                <img src="${article.image}" alt="Article Image">
+            </div>
+            <div class="article-content">
+                <div class="article-title">${article.title}</div>
+                <div class="article-summary">${article.summary}</div>
+            </div>
+        </a>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if we are on the initial screen and render articles
+    renderArticles();
+});
