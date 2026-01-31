@@ -24,6 +24,20 @@ function showScreen(screenId) {
     window.scrollTo(0, 0);
 }
 
+function toggleDetails() {
+    const content = document.getElementById('details-collapse');
+    const icon = document.getElementById('toggle-icon');
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.classList.remove('fa-caret-right');
+        icon.classList.add('fa-caret-down');
+    } else {
+        content.style.display = 'none';
+        icon.classList.remove('fa-caret-down');
+        icon.classList.add('fa-caret-right');
+    }
+}
+
 function goToSimpleResult() {
     // Validate inputs (Updated Order)
     const inputs = ['input-age', 'input-health', 'input-pension', 'input-savings', 'input-property'];
