@@ -239,25 +239,38 @@
             <!-- New Chart Annotation Text -->
             <div class="result-text-block"
                 style="background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:20px; font-size:0.9rem; line-height:1.6;">
-                <p><strong>想定される生活状況によって、<br>必要となる支出水準は変わります。</strong></p>
-                <ul style="list-style:none; margin:10px 0; padding-left:10px; border-left:3px solid #ddd;">
-                    <li style="margin-bottom:8px;">お体の状態が比較的安定している場合<br><span
-                            style="color:var(--primary-color); font-weight:bold;">→ 月18万〜22万円前後</span></li>
-                    <li>介護サポートが増える場合<br><span style="color:var(--danger-color); font-weight:bold;">→ 月22万〜30万円前後</span>
-                    </li>
-                </ul>
-                <p style="font-size:0.8rem; color:#666; margin-top:10px;">
-                    ※この結果は、ご自宅の価値を「平均的な相場」で仮置きして算出しています。<br>
-                    実際の条件が分かると、資産寿命は前後する可能性があります。<br>
-                    上記の金額には、将来的に老人ホーム等の居住費用が発生する可能性を想定しています。
+                <p style="margin-bottom:10px;"><strong>想定される生活状況によって、<br>必要となる支出水準は変わります。</strong></p>
+
+                <!-- Toggle Button -->
+                <button type="button" class="btn-toggle-details" onclick="toggleDetails()">
+                    <i class="fa-solid fa-caret-right" id="toggle-icon"></i> 支出目安・前提条件を確認する
+                </button>
+
+                <!-- Collapsible Content -->
+                <div id="details-collapse" class="details-content" style="display:none; margin-top:15px;">
+                    <ul style="list-style:none; margin:10px 0; padding-left:10px; border-left:3px solid #ddd;">
+                        <li style="margin-bottom:8px;">お体の状態が比較的安定している場合<br><span
+                                style="color:var(--primary-color); font-weight:bold;">→ 月18万〜22万円前後</span></li>
+                        <li>介護サポートが増える場合<br><span style="color:var(--danger-color); font-weight:bold;">→
+                                月22万〜30万円前後</span>
+                        </li>
+                    </ul>
+                    <p style="font-size:0.8rem; color:#666; margin-top:10px;">
+                        ※この結果は、ご自宅の価値を「平均的な相場」で仮置きして算出しています。<br>
+                        実際の条件が分かると、資産寿命は前後する可能性があります。<br>
+                        上記の金額には、将来的に老人ホーム等の居住費用が発生する可能性を想定しています。
+                    </p>
+                    <p style="margin-top:15px; font-weight:bold;">
+                        正確な金額を今決める必要はありません。<br>
+                        あくまで、今後を考えるための目安です。
+                    </p>
+                </div>
+
+                <p style="margin-top:20px; font-weight:bold; text-align:center;">
+                    この結果を踏まえて、次の進め方を選んでください。
                 </p>
-                <p style="margin-top:15px; font-weight:bold;">
-                    正確な金額を今決める必要はありません。<br>
-                    あくまで、今後を考えるための目安です。
-                </p>
-                <p style="margin-top:10px;">
-                    この結果を、今後の判断材料として使うために、<br>
-                    次の一歩を確認してみましょう。
+                <p style="text-align:center; font-size:0.8rem; color:#2e7d32; margin-top:5px;">
+                    ※どの選択肢を選んでも、今すぐの契約や連絡は発生しません。
                 </p>
             </div>
 
