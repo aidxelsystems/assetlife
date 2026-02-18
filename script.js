@@ -241,6 +241,7 @@ function renderChart(canvasId, dataPoints, dangerIndex) {
             }]
         },
         options: {
+            animation: false, // Turn off animation for screenshots
             responsive: true,
             maintainAspectRatio: false,
             layout: {
@@ -380,7 +381,7 @@ function selectAction(type) {
     }
 }
 
-function submitFinalAB() {
+async function submitFinalAB() {
     // Validation
     const checkboxes = document.querySelectorAll('#form-confirm-ab input[name="service"]:checked');
     if (checkboxes.length === 0) {
@@ -400,28 +401,59 @@ function submitFinalAB() {
         return;
     }
 
-    // Capture Data (Mock)
-    const data = {
+    // Capture Data
+    const payload = {
+        // Basic Info from Step 1
+        age: userData.age,
+        healthInfo: userData.healthCost, // Sending cost as proxy for status for now
+        pension: userData.pension,
+        savings: userData.savings,
+        propertyValue: userData.property,
+        
+        // Detailed Info from Bridge
+        city: userData.detail.city,
+        landSize: userData.detail.landSize,
+        buildingAge: userData.detail.buildingAge,
+        email: userData.email,
+        
+        // Final Lead Info from Step 5
+        phone: phone,
+        addressDetail: addressDetail,
         route: currentRoute,
         services: Array.from(checkboxes).map(c => c.value),
         contactTime: document.getElementById('input-contact-time').value,
         urgency: document.getElementById('input-urgency').value,
-        address: (userData.detail.city || '') + addressDetail,
-        phone: phone,
         remarks: document.getElementById('input-remarks').value
     };
 
-    console.log('Sending AB Data:', data);
+    console.log('Sending Data:', payload);
 
-    // Success Message Logic
-    let msg1 = '数日～１週間以内に担当から直接連絡があります。';
-    let msg2 = 'この結果ページは保存されています。判断に迷ったら、いつでも見返せます。';
+    try {
+        const response = await fetch('/api/leads', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
 
-    if (currentRoute === 'B') {
-        msg1 = '複数社から直接連絡が入る可能性があります。';
+        if (response.ok) {
+            // Success Message Logic
+            let msg1 = '数日～１週間以内に担当から直接連絡があります。';
+            let msg2 = 'この結果ページは保存されています。判断に迷ったら、いつでも見返せます。';
+
+            if (currentRoute === 'B') {
+                msg1 = '複数社から直接連絡が入る可能性があります。';
+            }
+
+            showComplete(msg1, msg2);
+        } else {
+            alert('送信に失敗しました。時間をおいて再度お試しください。');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('通信エラーが発生しました。');
     }
-
-    showComplete(msg1, msg2);
 }
 
 function submitFinalC() {
@@ -447,7 +479,7 @@ function submitFinalC() {
         case 'car':
             externalUrl = 'https://example.com/car-assessment'; // Placeholder
             break;
-        default:
+        case 'default':
             externalUrl = 'https://example.com';
     }
 
