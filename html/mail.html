@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>【自動送信】診断結果の保存URL - 見える化君</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+
+        .mail-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .mail-header {
+            background: #2c3e50;
+            color: #fff;
+            padding: 15px 20px;
+            font-weight: 500;
+        }
+
+        .mail-body {
+            padding: 30px 20px;
+            line-height: 1.6;
+        }
+
+        .mail-url {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f8ff;
+            border-left: 4px solid #0066cc;
+            word-break: break-all;
+        }
+
+        .mail-url a {
+            color: #0066cc;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .mail-url a:hover {
+            text-decoration: underline;
+        }
+
+        .note {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mail-container">
+        <div class="mail-header">
+            件名：【見える化君】シミュレーション結果の保存URLのご案内
+        </div>
+        <div class="mail-body">
+            <p>※本画面は、お客様に送信されるメール文面の確認システム（デモ）です。</p>
+            <p>見える化君をご利用いただき、誠にありがとうございます。<br>
+                シミュレーションの診断結果が保存されました。</p>
+
+            <p>後日、以下のURLにアクセスすることで、再度ご入力いただいた条件の診断結果をご確認いただけます。</p>
+
+            <div class="mail-url">
+                ▼あなたの診断結果URL<br>
+                <a href="#" id="result-link">生成中...</a>
+            </div>
+
+            <p>ご家族とお話しされる際などに、こちらのURLをご活用ください。</p>
+
+            <div class="note">
+                【各種お問い合わせ】<br>
+                見える化君 サポートデスク<br>
+                support@example.com
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const linkEl = document.getElementById('result-link');
+
+            if (token) {
+                // Generate URL using current host to match the actual IP/domain in use
+                const hostUrl = window.location.protocol + '//' + window.location.host;
+                const resultUrl = `${hostUrl}/?token=${token}`;
+                linkEl.href = resultUrl;
+                linkEl.textContent = resultUrl;
+            } else {
+                linkEl.textContent = 'エラー：トークンがありません';
+            }
+        });
+    </script>
+</body>
+
+</html>
