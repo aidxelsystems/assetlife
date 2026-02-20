@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>資産寿命シミュレーション</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-house-chimney-medical"></i>
+                <span>見える化君</span>
+            </div>
+        </header>
+
+        <!-- STEP 1: Input Form -->
+        <section id="step-input" class="screen active">
+            <div class="hero-text">
+                <h1>あなたの資産、<br>何歳まで持ちますか？</h1>
+                <p>5つの質問で老後の安心をシミュレーション</p>
+            </div>
+
+            <form id="simulation-form">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-building"></i> ご自宅の査定額（目安）</label>
+                    <select id="input-property" required>
+                        <option value="" disabled selected>選択してください</option>
+                        <option value="5000000">1,000万円未満</option>
+                        <option value="15000000">1,000〜2,000万円</option>
+                        <option value="30000000">2,000〜4,000万円</option>
+                        <option value="50000000">4,000〜6,000万円</option>
+                        <option value="70000000">6,000〜8,000万円</option>
+                        <option value="90000000">8,000万円以上</option>
+                        <option value="0">持ち家なし</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user"></i> ご年齢</label>
+                    <select id="input-age" required>
+                        <option value="" disabled selected>選択してください</option>
+                        <option value="67">60代後半</option>
+                        <option value="72">70代前半</option>
+                        <option value="77">70代後半</option>
+                        <option value="82">80代前半</option>
+                        <option value="87">80代後半</option>
+                        <option value="92">90歳以上</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-piggy-bank"></i> 預貯金額</label>
+                    <select id="input-savings" required>
+                        <option value="" disabled selected>選択してください</option>
+                        <option value="1500000">300万円未満</option>
+                        <option value="4000000">300〜500万円</option>
+                        <option value="7500000">500〜1,000万円</option>
+                        <option value="15000000">1,000〜2,000万円</option>
+                        <option value="25000000">2,000〜3,000万円</option>
+                        <option value="40000000">3,000万円以上</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-money-bill-wave"></i> 月額年金受給額</label>
+                    <select id="input-pension" required>
+                        <option value="" disabled selected>選択してください</option>
+                        <option value="80000">10万円未満</option>
+                        <option value="125000">10〜15万円</option>
+                        <option value="175000">15〜20万円</option>
+                        <option value="225000">20〜25万円</option>
+                        <option value="275000">25〜30万円</option>
+                        <option value="320000">30万円以上</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-heart-pulse"></i> お体の状態</label>
+                    <select id="input-health" required>
+                        <option value="" disabled selected>選択してください</option>
+                        <option value="0">自立</option>
+                        <option value="3000">歩行不安（リハビリ重視）</option>
+                        <option value="6000">要支援</option>
+                        <option value="20000">要介護1〜2</option>
+                        <option value="30000">要介護3〜5</option>
+                    </select>
+                </div>
+
+                <button type="button" class="btn-primary" onclick="goToSimpleResult()">
+                    シミュレーション結果を見る <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+        </section>
+
+        <!-- STEP 2: Simple Result -->
+        <section id="step-simple-result" class="screen">
+            <div class="result-header">
+                <h2>簡易診断結果</h2>
+                <div class="main-result">
+                    <span class="label">資産寿命</span>
+                    <div class="value"><span id="simple-age-result">--</span>歳<small>まで安心</small></div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="simpleChart"></canvas>
+            </div>
+
+            <div class="message-box">
+                <p><i class="fa-solid fa-triangle-exclamation"></i> 平均的な相場で試算した結果、<br><strong><span
+                            id="simple-years-left">--</span>年後</strong>に資金が不足する可能性があります。</p>
+            </div>
+
+            <button type="button" class="btn-primary" onclick="goToBridge()">
+                より正確な診断へ進む <i class="fa-solid fa-arrow-down"></i>
+            </button>
+        </section>
+
+        <!-- STEP 3: Bridge (Address Input) -->
+        <section id="step-bridge" class="screen">
+            <div class="bridge-content">
+                <i class="fa-solid fa-file-contract icon-large"></i>
+                <h2>精密シミュレーションへ</h2>
+                <p>正確な相場データを反映するために<br>以下の追加情報が必要です。</p>
+
+                <form id="detail-form">
+                    <div class="form-group">
+                        <label>エリア（区）</label>
+                        <select id="input-city">
+                            <option value="港区">港区</option>
+                            <option value="千代田区">千代田区</option>
+                            <option value="世田谷区">世田谷区</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>土地の広さ（坪）</label>
+                        <select id="input-land-size">
+                            <option value="less20">〜20坪</option>
+                            <option value="20-30">20〜30坪</option>
+                            <option value="30-40">30〜40坪</option>
+                            <option value="more40">40坪〜</option>
+                            <option value="unknown">不明</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>築年数</label>
+                        <select id="input-building-age">
+                            <option value="less15">15年未満</option>
+                            <option value="15-25">15〜25年</option>
+                            <option value="more25">25年以上</option>
+                            <option value="unknown">不明</option>
+                        </select>
+                    </div>
+
+                    <div style="margin: 24px 0; border-top: 1px dashed #ccc;"></div>
+
+                    <div class="form-group">
+                        <label>メールアドレス <span style="color:red">*</span></label>
+                        <input type="email" id="input-email" placeholder="例：taro@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>電話番号 <span style="font-size:0.8em; color:#999; font-weight:normal;">(任意)</span></label>
+                        <input type="tel" id="input-phone" placeholder="例：090-1234-5678">
+                    </div>
+
+                    <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">
+                        結果はすぐ画面に表示され、<br>保存用としてメールにもお送りします。
+                    </p>
+                </form>
+
+                <button type="button" class="btn-secondary" onclick="goToFullResult()">
+                    精密シミュレーションを見る <i class="fa-solid fa-lock"></i>
+                </button>
+                <p class="privacy-note"><small>入力情報はSSLで暗号化され保護されます。</small></p>
+            </div>
+        </section>
+
+        <!-- STEP 4: Full Result -->
+        <section id="step-full-result" class="screen">
+            <div class="result-header premium">
+                <div class="badge">完全版レポート</div>
+                <h2>詳細診断結果</h2>
+                <div class="main-result">
+                    <span class="label">修正後の資産寿命</span>
+                    <div class="value"><span id="full-age-result">--</span>歳<small>まで伸長可能</small></div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="fullChart"></canvas>
+            </div>
+
+            <div class="warning-zone" id="warning-zone">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <p>85歳時点で資金ショートのリスクがあります。<br>早めの対策が必要です。</p>
+            </div>
+
+            <div class="action-buttons">
+                <h3>この結果を現実にするために</h3>
+
+                <div class="card-btn" onclick="openExternal('assessment')">
+                    <div class="icon"><i class="fa-solid fa-magnifying-glass-dollar"></i></div>
+                    <div class="text">
+                        <strong>正確な自宅の価値を知る</strong>
+                        <small>無料一括査定で資金計画を確定</small>
+                    </div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+
+                <div class="card-btn" onclick="openExternal('consult')">
+                    <div class="icon"><i class="fa-solid fa-comments"></i></div>
+                    <div class="text">
+                        <strong>専門家に相談する</strong>
+                        <small>今の資産で入れる施設を探す</small>
+                    </div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
