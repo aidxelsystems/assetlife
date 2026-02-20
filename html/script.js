@@ -241,7 +241,6 @@ function renderChart(canvasId, dataPoints, dangerIndex) {
             }]
         },
         options: {
-            animation: false, // Turn off animation for screenshots
             responsive: true,
             maintainAspectRatio: false,
             layout: {
@@ -402,7 +401,7 @@ async function submitFinalAB() {
     }
 
     // Capture Data
-    const payload = {
+    const data = {
         // Basic Info from Step 1
         age: userData.age,
         healthInfo: userData.healthCost, // Sending cost as proxy for status for now
@@ -426,27 +425,27 @@ async function submitFinalAB() {
         remarks: document.getElementById('input-remarks').value
     };
 
-    console.log('Sending Data:', payload);
+    console.log('Sending AB Data:', data);
 
     try {
-        const response = await fetch('/api/leads', {
+        const response = await fetch('/api/leads', { // Using correct endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(data)
         });
 
         if (response.ok) {
-            const data = await response.json(); // Get Token
+            const responseData = await response.json(); // Get Token
             // Redirect to mail.html mockup, passing the token
-            window.location.href = `mail.html?token=${data.token}`;
+            window.location.href = `mail.html?token=${responseData.token}`;
         } else {
             alert('送信に失敗しました。時間をおいて再度お試しください。');
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('通信エラーが発生しました。');
+        console.error('Error submitting AB data:', error);
+        alert('通信エラーが発生しました。再度お試しください。');
     }
 }
 
@@ -483,24 +482,86 @@ function submitFinalC() {
     }
 }
 
-
-// Updated showComplete to show URL
-function showComplete(msg1, msg2, token) {
+function showComplete(msg1, msg2) {
     document.getElementById('complete-msg-1').textContent = msg1;
-    let html = msg2 + '<br>また条件の整理し直しも可能です。';
+    document.getElementById('complete-msg-2').innerHTML = msg2 + '<br>また条件の整理し直しも可能です。';
 
-    if (token) {
-        const url = window.location.origin + '/?token=' + token;
-        html += '<br><br><strong>この結果の保存用URL:</strong><br><a href="' + url + '" target="_blank">' + url + '</a>';
-    }
-
-    document.getElementById('complete-msg-2').innerHTML = html;
     showScreen('step-complete');
+
+    // Scroll to top
     window.scrollTo(0, 0);
 }
 
+function openExternal(type) {
+    if (type === 'assessment') {
+        alert('不動産一括査定サイトへ遷移します（デモ）');
+    } else if (type === 'consult') {
+        alert('専門家相談フォームへ遷移します（デモ）');
+    }
+}
 
-// Token Loading Logic
+// Modal Logic
+function showModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function (event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Fixed Articles Logic
+const fixedArticles = [
+    { title: "老後の資金、足りる？不足する？", summary: "年金だけでは不安な方へ。資産寿命の考え方を解説します。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article1" },
+    { title: "自宅を資産として活用する方法", summary: "住み続けながら資金を作る「リースバック」とは？", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article2" },
+    { title: "老人ホームの費用相場まとめ", summary: "入居一時金や月額費用の目安を分かりやすく解説。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article3" },
+    { title: "「資産寿命」を延ばす3つのポイント", summary: "早めの対策が鍵。今すぐできる家計の見直し術。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article4" },
+    { title: "介護破産を防ぐための基礎知識", summary: "親の介護費用、もしもの時に備えるために。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article5" },
+    { title: "専門家が教える「失敗しない施設選び」", summary: "見学時にチェックすべき重要ポイントを公開。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article6" },
+    { title: "不動産売却のタイミングはいつ？", summary: "市場動向と個人の状況から最適な時期を判断。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article7" },
+    { title: "子供に迷惑をかけないために", summary: "元気なうちに整理しておきたい資産と情報の話。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article8" },
+    { title: "「終活」は何から始めるべき？", summary: "エンディングノートの書き方から断捨離まで。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article9" },
+    { title: "私たちについて（運営理念）", summary: "シニアの安心な暮らしをサポートする想い。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article10" }
+];
+
+function renderArticles() {
+    const container = document.getElementById('fixed-articles-container');
+    if (!container) return;
+
+    let html = '<h3 style="margin-bottom:15px; font-size:1.1rem; color:#333; text-align:center;">お役立ち情報</h3>';
+
+    fixedArticles.forEach(article => {
+        html += `
+        <a href="${article.link}" class="article-banner">
+            <div class="article-image">
+                <img src="${article.image}" alt="Article Image">
+            </div>
+            <div class="article-content">
+                <div class="article-title">${article.title}</div>
+                <div class="article-summary">${article.summary}</div>
+            </div>
+        </a>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     // Check for token in URL
     const urlParams = new URLSearchParams(window.location.search);
