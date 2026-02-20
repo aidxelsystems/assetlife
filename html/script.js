@@ -24,6 +24,60 @@ function showScreen(screenId) {
     window.scrollTo(0, 0);
 }
 
+// Check for token on load
+window.addEventListener('DOMContentLoaded', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (token) {
+        try {
+            const res = await fetch(`/api/results/${token}`);
+            const data = await res.json();
+
+            if (data.success && data.data) {
+                const dbData = data.data;
+
+                // Repopulate user data
+                userData.property = dbData.propertyValue || 0;
+                userData.age = dbData.age || 0;
+                userData.savings = dbData.savings || 0;
+                userData.pension = dbData.pension || 0;
+                userData.healthCost = dbData.healthCost || 0;
+                userData.email = dbData.email || '';
+                userData.phone = dbData.phone || '';
+
+                // Recalculate or use fetched results
+                const result = calculateAssetLifespan(DEFAULT_MONTHLY_FEE, DEFAULT_INITIAL_FEE);
+
+                document.getElementById('full-age-result').textContent = dbData.result_asset_lifespan || result.lifespan;
+                renderChart('fullChart', result.chartData);
+
+                // Show warning if refined lifespan is low
+                const warningEl = document.getElementById('warning-zone');
+                if ((dbData.result_asset_lifespan || result.lifespan) < 85) {
+                    warningEl.style.display = 'flex';
+                    warningEl.querySelector('p').innerHTML = `${dbData.result_asset_lifespan || result.lifespan}歳で資金が尽きる可能性があります。<br>対策を検討しましょう。`;
+                } else {
+                    warningEl.style.display = 'none';
+                }
+
+                // Hide action buttons in confirm block
+                const actionBtns = document.querySelector('.action-buttons');
+                if (actionBtns) actionBtns.style.display = 'none';
+
+                // Show result screen directly
+                showScreen('step-full-result');
+
+            } else {
+                alert('入力データが見つかりませんでした。期限切れの可能性があります。');
+            }
+        } catch (error) {
+            console.error('Error fetching result:', error);
+            alert('データの取得に失敗しました。');
+        }
+    }
+});
+
 function goToSimpleResult() {
     // Validate inputs
     const inputs = ['input-property', 'input-age', 'input-savings', 'input-pension', 'input-health'];
@@ -225,12 +279,53 @@ function renderChart(canvasId, dataPoints) {
     });
 }
 
-function openExternal(type) {
-    if (type === 'assessment') {
-        alert('不動産一括査定サイトへ遷移します（デモ）');
-        // window.open('https://example.com/assessment', '_blank');
-    } else if (type === 'consult') {
-        alert('専門家相談フォームへ遷移します（デモ）');
-        // window.location.href = 'consult.html';
+async function openExternal(type) {
+    // Basic validation to ensure they passed Step 3
+    if (!userData.email) {
+        alert('メールアドレスが入力されていません。前画面に戻り入力してください。');
+        showScreen('step-bridge');
+        return;
+    }
+
+    try {
+        // Construct payload mimicking the required fields for /api/leads
+        const payload = {
+            age: userData.age,
+            healthInfo: userData.healthCost,
+            pension: userData.pension,
+            savings: userData.savings,
+            propertyValue: userData.property,
+            city: userData.detail.city || '未入力',
+            landSize: userData.detail.landSize || '未入力',
+            buildingAge: userData.detail.buildingAge || '未入力',
+            email: userData.email,
+            phone: userData.phone || '',
+            route: type === 'assessment' ? 'B' : 'A',
+            services: type === 'assessment' ? '不動産査定' : '専門家相談',
+            contactTime: 'いつでもよい',
+            urgency: '情報収集',
+            remarks: '',
+            addressDetail: ''
+        };
+
+        const res = await fetch('/api/leads', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (data.success && data.token) {
+            // Redirect to mail.html mockup, passing the token
+            window.location.href = `mail.html?token=${data.token}`;
+        } else {
+            alert('送信に失敗しました。再度お試しください。');
+        }
+    } catch (error) {
+        console.error('Error submitting data:', error);
+        alert('通信エラーが発生しました。インターネット接続を確認してください。');
     }
 }
