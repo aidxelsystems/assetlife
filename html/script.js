@@ -438,8 +438,14 @@ async function submitFinalAB() {
 
         if (response.ok) {
             const responseData = await response.json(); // Get Token
-            // Redirect to mail.html mockup, passing the token
-            window.location.href = `mail.html?token=${responseData.token}`;
+            // Save the token to local storage for the hidden mail feature
+            localStorage.setItem('last_generated_token', responseData.token);
+
+            // Show the normal complete screen to the user
+            showComplete(
+                '専門家連携の準備が整いました。',
+                'ご入力いただいた情報をもとに連携を進めます。'
+            );
         } else {
             alert('送信に失敗しました。時間をおいて再度お試しください。');
         }
