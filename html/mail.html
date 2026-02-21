@@ -93,17 +93,31 @@
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
+            let token = urlParams.get('token');
             const linkEl = document.getElementById('result-link');
+            const bodyEl = document.querySelector('.mail-body');
+
+            // If not in URL, try to get from localStorage
+            if (!token) {
+                token = localStorage.getItem('last_generated_token');
+            }
 
             if (token) {
-                // Generate URL using current host to match the actual IP/domain in use
-                const hostUrl = window.location.protocol + '//' + window.location.host;
-                const resultUrl = `${hostUrl}/?token=${token}`;
+                // Generate URL using current host and path to point back to index.html
+                const currentPath = window.location.pathname;
+                const dirPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+                const hostUrl = window.location.protocol + '//' + window.location.host + dirPath;
+                const resultUrl = `${hostUrl}/index.html?token=${token}`;
                 linkEl.href = resultUrl;
                 linkEl.textContent = resultUrl;
             } else {
-                linkEl.textContent = 'エラー：トークンがありません';
+                // Show Error Mode
+                bodyEl.innerHTML = `
+                    <div style="color: #d63031; font-weight: bold; font-size: 1.1rem; text-align: center; padding: 20px 0;">
+                        エラー：メールアドレスがありません（トークンが見つかりません）。<br>
+                        先にシミュレーションを実行してください。
+                    </div>
+                `;
             }
         });
     </script>
