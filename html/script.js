@@ -601,8 +601,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('input-pension').value = userData.pension;
                 document.getElementById('input-savings').value = userData.savings;
                 document.getElementById('input-property').value = userData.property;
-                // ... others if needed
 
+                // Need to populate these as well because goToFullResult() reads from them!
+                document.getElementById('input-city').value = userData.detail.city || '東京都平均';
+                document.getElementById('input-land-size').value = userData.detail.landSize || '';
+                document.getElementById('input-building-age').value = userData.detail.buildingAge || '';
+                document.getElementById('input-email').value = userData.email || '';
+                const phoneInput = document.getElementById('input-phone');
+                if (phoneInput) phoneInput.value = userData.phone || '';
                 // Jump to Full Result
 
                 // Hide action buttons in confirm block since they are viewing from email
