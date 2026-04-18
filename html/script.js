@@ -533,38 +533,47 @@ window.onclick = function (event) {
 
 // Fixed Articles Logic
 const fixedArticles = [
-    { title: "老後の資金、足りる？不足する？", summary: "年金だけでは不安な方へ。資産寿命の考え方を解説します。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article1" },
-    { title: "自宅を資産として活用する方法", summary: "住み続けながら資金を作る「リースバック」とは？", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article2" },
-    { title: "老人ホームの費用相場まとめ", summary: "入居一時金や月額費用の目安を分かりやすく解説。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article3" },
-    { title: "「資産寿命」を延ばす3つのポイント", summary: "早めの対策が鍵。今すぐできる家計の見直し術。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article4" },
-    { title: "介護破産を防ぐための基礎知識", summary: "親の介護費用、もしもの時に備えるために。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article5" },
-    { title: "専門家が教える「失敗しない施設選び」", summary: "見学時にチェックすべき重要ポイントを公開。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article6" },
-    { title: "不動産売却のタイミングはいつ？", summary: "市場動向と個人の状況から最適な時期を判断。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article7" },
-    { title: "子供に迷惑をかけないために", summary: "元気なうちに整理しておきたい資産と情報の話。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article8" },
-    { title: "「終活」は何から始めるべき？", summary: "エンディングノートの書き方から断捨離まで。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article9" },
-    { title: "私たちについて（運営理念）", summary: "シニアの安心な暮らしをサポートする想い。", link: "#", image: "https://placehold.co/80x60/e0e0e0/333?text=Article10" }
+    { title: "身体が動くうちにしか、できない判断がある", summary: "東京23区の医療・介護現場の最前線で20年以上、延べ5万件を超える方々と向き合ってきました...", link: "blog/article-01.html", image: "https://placehold.co/80x60/e0e0e0/333?text=Article1" },
+    { title: "まだ元気だけど、いつからお金の心配をすべきか", summary: "「まだ元気だから大丈夫」 そう思っている間に、本来選べたはずの選択肢が、静かに消えていく...", link: "blog/article-02.html", image: "https://placehold.co/80x60/e0e0e0/333?text=Article2" },
+    { title: "判断を先延ばしにして一番困るのは誰か", summary: "「まだ自分で決められるから、もう少し先でいい」", link: "blog/article-03.html", image: "https://placehold.co/80x60/e0e0e0/333?text=Article3" },
+    { title: "家族に相談できない人が、最初にやるべき整理", summary: "「家族には心配をかけたくない」「疎遠になっていて今さら相談しにくい」", link: "blog/article-04.html", image: "https://placehold.co/80x60/e0e0e0/333?text=Article4" },
+    { title: "介護が始まる前と後で、選択肢はどう変わるか", summary: "「介護が必要になったら、その時に考えればいい」", link: "blog/article-05.html", image: "https://placehold.co/80x60/e0e0e0/333?text=Article5" },
+    { title: "自宅を売らずに済む人・売った方が楽になる人の違い", summary: "「住み慣れた我が家を売るなんて考えられない」「でも、このままここで暮らし続けて、本当にお金は足りるのだろうか？」", link: "blog/article-06.html", image: "https://placehold.co/80x60/e0e0e0/333?text=Article6" },
+    { title: "老人ホームに入らない選択肢は、いつまで持てるのか", summary: "「最期まで、住み慣れたこの家で自分らしく過ごしたい」", link: "blog/article-07.html", image: "https://placehold.co/80x60/e0e0e0/333?text=Article7" },
+    { title: "お金より先に考えるべき「生活の崩れポイント」", summary: "「老後はお金さえあれば大丈夫」もしそう思っているなら、あなたは人生の後半戦で最も重要な「予兆」を見逃しているかもしれません。", link: "blog/article-08.html", image: "https://placehold.co/80x60/e0e0e0/333?text=Article8" },
+    { title: "売却・施設・在宅──それぞれで失敗しやすい判断", summary: "「家を売って、その資金で施設に入るのが一番安心だ」「いや、住み慣れた家で最期まで過ごすのが幸せに決まっている」", link: "blog/article-09.html", image: "https://placehold.co/80x60/e0e0e0/333?text=Article9" },
+    { title: "実情：本当に一番つらいのは「準備ゼロ」で入ること", summary: "「施設に入るのは、いよいよダメになってからでいい」", link: "blog/article-10.html", image: "https://placehold.co/80x60/e0e0e0/333?text=Article10" }
 ];
 
 function renderArticles() {
     const container = document.getElementById('fixed-articles-container');
     if (!container) return;
 
-    let html = '<h3 style="margin-bottom:15px; font-size:1.1rem; color:#333; text-align:center;">お役立ち情報</h3>';
+    let html = `
+    <div class="toc-wrap">
+      <h2 class="toc-title"><span class="accent">お役立ち情報</span></h2>
+      <p class="toc-sub">現場20年・延べ5万件の事例から、“今の判断”を支える10本のコラム</p>
+      <ol class="toc-list">
+    `;
 
-    fixedArticles.forEach(article => {
+    fixedArticles.forEach((article, index) => {
         html += `
-        <a href="${article.link}" class="article-banner">
-            <div class="article-image">
-                <img src="${article.image}" alt="Article Image">
+        <li>
+          <a class="toc-item" href="${article.link}">
+            <span class="toc-num">${index + 1}</span>
+            <div class="toc-body">
+              <p class="toc-heading">${article.title}</p>
+              <p class="toc-excerpt">${article.summary}</p>
             </div>
-            <div class="article-content">
-                <div class="article-title">${article.title}</div>
-                <div class="article-summary">${article.summary}</div>
-            </div>
-        </a>
+            <span class="toc-arrow">›</span>
+          </a>
+        </li>
         `;
     });
 
+    html += `
+      </ol>
+    </div>`;
     container.innerHTML = html;
 }
 
